@@ -49,6 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     Button clearScreen;
     Button hamburger;
     TextView tvMAReceivedMessage;
+    TextView tvMAMessage;
     Spinner spinnerBTPairedDevices;
     LinearLayout linearLayoutPopup;
     PopupWindow popupWindow;
@@ -72,8 +73,7 @@ public class HomeActivity extends AppCompatActivity {
     static final int BT_STATE_CONNECTED=3;
     static final int BT_STATE_CONNECTION_FAILED=4;
     static final int BT_STATE_MESSAGE_RECEIVED=5;
-
-
+    final Handler animhandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
         tvMAReceivedMessage=findViewById(R.id.idMATextViewReceivedMessage);
+        tvMAMessage=findViewById(R.id.idMATextViewMessage);
         tvMAReceivedMessage.setMovementMethod(new ScrollingMovementMethod());
         buttonConnect=findViewById(R.id.idMAButtonConnect);
         buttonStart=findViewById(R.id.idMAButtonStartCMD);
@@ -132,6 +133,7 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d(TAG, "Selected Device=" + sSelectedDevice);
                     for (BluetoothDevice BTDev : BTPairedDevices) {
                         if (sSelectedDevice.equals(BTDev.getName())) {
+                            tvMAMessage.setText("Connecting......");
                             BTDevice = BTDev;
                             Log.d(TAG, "Selected Device UUID=" + BTDevice.getAddress());
                             cBluetoothConnect cBTConnect=new cBluetoothConnect(BTDevice);
@@ -327,8 +329,14 @@ public class HomeActivity extends AppCompatActivity {
                     break;
                 case BT_STATE_CONNECTED:
                     iBTConnectionStatus=BT_CON_STATUS_CONNECTED;
-                    buttonConnect.setText("Disconnect");
                     Log.d(TAG,"BT_STATE_CONNECTED");
+                    animhandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            tvMAMessage.setText("Connected to vehicle");
+                            buttonConnect.setText("Disconnect");
+                        }
+                    }, 10000);
                     cBTInitSendReceive=new classBTInitDataCommunication(BTSocket);
                     cBTInitSendReceive.start();
                     bBTConnected=true;
