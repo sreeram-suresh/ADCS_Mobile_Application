@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <Button
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
@@ -51,11 +50,5 @@
                 android:text="Logout">
             </Button>
         </LinearLayout>
-
-
-
     </LinearLayout>
-
-
-
 </LinearLayout>

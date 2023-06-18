@@ -2,7 +2,6 @@ package com.example.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
@@ -21,28 +20,20 @@ import android.os.Message;
 import android.telephony.SmsManager;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
-
 public class HomeActivity extends AppCompatActivity {
     DBHelper DB;
-
     private static final String TAG="DEBUG_HA";
     Button buttonConnect;
     Button buttonStart;
@@ -51,8 +42,6 @@ public class HomeActivity extends AppCompatActivity {
     TextView tvMAReceivedMessage;
     TextView tvMAMessage;
     Spinner spinnerBTPairedDevices;
-    LinearLayout linearLayoutPopup;
-    PopupWindow popupWindow;
     LocationManager locationManager;
     String latitude, longitude,st,link;
     static final UUID MY_UUID= UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -82,11 +71,10 @@ public class HomeActivity extends AppCompatActivity {
         animhandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                tvMAMessage.setText("Loading......");
+                tvMAMessage.setText("Please connect to Vehicle");
             }
-        }, 3000);
+        }, 4000);
         Log.d(TAG, "onCreate-Start");
-
         tvMAReceivedMessage=findViewById(R.id.idMATextViewReceivedMessage);
         tvMAMessage=findViewById(R.id.idMATextViewMessage);
         tvMAReceivedMessage.setMovementMethod(new ScrollingMovementMethod());
@@ -96,23 +84,15 @@ public class HomeActivity extends AppCompatActivity {
         hamburger=findViewById(R.id.idMAHamburger);
         spinnerBTPairedDevices=findViewById(R.id.idMASpinnerBTPairedDevices);
         DB=new DBHelper(this);
-
         locationManager=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-
         hamburger.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
                 Log.d(TAG,"Hamburger Clicked!");
-
                 Intent intent = new Intent(getApplicationContext(), Hamburger.class);
                 startActivity(intent);
-
             }
         });
-
-
-
         clearScreen.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -120,7 +100,6 @@ public class HomeActivity extends AppCompatActivity {
                 tvMAReceivedMessage.setText("");
             }
         });
-
         buttonConnect.setOnClickListener(new View.OnClickListener(){
             @SuppressLint("MissingPermission")
             @Override
@@ -161,7 +140,6 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
-
         buttonStart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -170,7 +148,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-
     private String getLocation() {
 
         if (ActivityCompat.checkSelfPermission(HomeActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(HomeActivity.this,
@@ -193,8 +170,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 latitude=String.valueOf(lat);
                 longitude=String.valueOf(longi);
-                st="Location:\n"+"https://maps.google.com/?q="+latitude+","+longitude;
-
+                st="\nLocation: "+"https://maps.google.com/?q="+latitude+","+longitude;
                 return st;
             }
             else if (LocationNetwork !=null)
@@ -204,8 +180,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 latitude=String.valueOf(lat);
                 longitude=String.valueOf(longi);
-                st="Location:\n"+"https://maps.google.com/?q="+latitude+","+longitude;
-
+                st="\nLocation: "+"https://maps.google.com/?q="+latitude+","+longitude;
                 return st;
             }
             else if (LocationPassive !=null)
@@ -215,19 +190,16 @@ public class HomeActivity extends AppCompatActivity {
 
                 latitude=String.valueOf(lat);
                 longitude=String.valueOf(longi);
-                st="Location:\n"+"https://maps.google.com/?q="+latitude+","+longitude;
-
+                st="\nLocation: "+"https://maps.google.com/?q="+latitude+","+longitude;
                 return st;
             }
             else
             {
-                st="Please contact them";
+                st="Please contact them.";
             }
         }
         return st;
-
     }
-
     public class cBluetoothConnect extends Thread
     {
         private BluetoothDevice device;
@@ -260,7 +232,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
-
     public class classBTInitDataCommunication extends Thread
     {
         private final BluetoothSocket bluetoothSocket;
@@ -270,7 +241,6 @@ public class HomeActivity extends AppCompatActivity {
         public classBTInitDataCommunication(BluetoothSocket socket)
         {
             Log.i(TAG,"classBTInitDataCommunication-start");
-
             bluetoothSocket=socket;
 
             try {
@@ -302,10 +272,10 @@ public class HomeActivity extends AppCompatActivity {
                             BTSocket.close();
                         }
                         buttonConnect.setText("Connect");
+                        tvMAMessage.setText("Please connect to Vehicle");
                         bBTConnected=false;
                     } catch(IOException ex){
                         ex.printStackTrace();
-
                     }
                 }
             }
@@ -340,7 +310,7 @@ public class HomeActivity extends AppCompatActivity {
                             tvMAMessage.setText("Connected to vehicle");
                             buttonConnect.setText("Disconnect");
                         }
-                    }, 5000);
+                    }, 3000);
                     cBTInitSendReceive=new classBTInitDataCommunication(BTSocket);
                     cBTInitSendReceive.start();
                     bBTConnected=true;
@@ -354,7 +324,6 @@ public class HomeActivity extends AppCompatActivity {
                     byte[] readBuff=(byte[]) msg.obj;
                     String tempMsg=new String(readBuff,0,msg.arg1);
                     Log.d(TAG,"Message Receive("+tempMsg.length()+"data:"+tempMsg);
-
                     if(tempMsg.charAt(0)=='e') {
                         link=getLocation();
                         tvMAReceivedMessage.append("\nEmergency");
@@ -362,20 +331,17 @@ public class HomeActivity extends AppCompatActivity {
                         String un = spp.getString("loginuser","");
                         SmsManager smsManager=SmsManager.getDefault();
                         Cursor res=DB.getdata(un);
-                        StringBuffer buffer=new StringBuffer();
                         while(res.moveToNext()){
                             smsManager.sendTextMessage(res.getString(1),null,"EMERGENCY!\n"+un+" is currently intoxicated.\n" +
                                     "Please check to ensure their safety "+link,null,null);
                         }
                         Toast.makeText(HomeActivity.this, "Emergency message has been sent to all the available emergency contacts", Toast.LENGTH_SHORT).show();
-
                     }
                     break;
             }
             return true;
         }
     });
-
     public void sendMessage(String sMessage)
     {
         if(BTSocket!=null && iBTConnectionStatus==BT_CON_STATUS_CONNECTED)
@@ -387,16 +353,14 @@ public class HomeActivity extends AppCompatActivity {
                     tvMAReceivedMessage.append("\r\n ->" +sMessage);
                 }catch(Exception exp){
                     Toast.makeText(this, "Can't send MESSAGE!!!", Toast.LENGTH_SHORT).show();
-
                 }
             }
         }
         else{
             Toast.makeText(this, "Please connect to bluetooth device.", Toast.LENGTH_SHORT).show();
-            tvMAReceivedMessage.append("\r\n Nt Connected to Bluetooth");
+            tvMAReceivedMessage.append("\r\n Not Connected to Bluetooth");
         }
     }
-
     @SuppressLint("MissingPermission")
     void getBTPairedDevices()
     {
@@ -412,16 +376,13 @@ public class HomeActivity extends AppCompatActivity {
             Log.e(TAG,"getBTPairedDevices, BT not enabled.");
             return;
         }
-
         BTPairedDevices=BTAdapter.getBondedDevices();
         Log.e(TAG,"getBTPairedDevices, Paired Devices count="+BTPairedDevices.size());
         for(BluetoothDevice BTDev:BTPairedDevices)
         {
             Log.d(TAG,BTDev.getName()+","+BTDev.getAddress());
         }
-
     }
-
     @SuppressLint("MissingPermission")
     void populateSpinnerWithBTPairedDevices()
     {
@@ -435,7 +396,6 @@ public class HomeActivity extends AppCompatActivity {
         aaPairedDevices.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         spinnerBTPairedDevices.setAdapter(aaPairedDevices);
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -443,20 +403,4 @@ public class HomeActivity extends AppCompatActivity {
         getBTPairedDevices();
         populateSpinnerWithBTPairedDevices();
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause-Start");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "onDestroy-Start");
-    }
 }
-
-
-
-

@@ -21,7 +21,6 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:background="@color/black">
-
             <Spinner
                 android:id="@+id/idMASpinnerBTPairedDevices"
                 android:layout_width="match_parent"
@@ -33,7 +32,6 @@
             android:layout_height="match_parent"
             android:layout_weight="0.4"
             android:background="@color/black">
-
             <Button
                 android:id="@+id/idMAButtonConnect"
                 android:layout_width="match_parent"
@@ -51,7 +49,7 @@
             <Button
                 android:id="@+id/idMAHamburger"
                 android:text="⋮"
-                android:textSize="22dp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -91,14 +89,13 @@
                 android:layout_height="match_parent"
                 android:background="@color/black"
                 android:cursorVisible="false"
-                android:text="Please Connect to Vehicle"
+                android:text="Loading......"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textColorHint="#FFFFFF"
                 android:textSize="19sp"
                 android:visibility="visible"></TextView>
         </LinearLayout>
-
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,7 +112,6 @@
             android:paddingLeft="85dp"
             android:paddingTop="40dp"
             android:layout_weight="4">
-
             <Button
                 android:id="@+id/idMAButtonStartCMD"
                 android:layout_width="240dp"
