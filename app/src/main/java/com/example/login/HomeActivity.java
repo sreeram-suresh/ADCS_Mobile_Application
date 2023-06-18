@@ -79,9 +79,13 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        animhandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                tvMAMessage.setText("Loading......");
+            }
+        }, 3000);
         Log.d(TAG, "onCreate-Start");
-
 
         tvMAReceivedMessage=findViewById(R.id.idMATextViewReceivedMessage);
         tvMAMessage=findViewById(R.id.idMATextViewMessage);
@@ -336,7 +340,7 @@ public class HomeActivity extends AppCompatActivity {
                             tvMAMessage.setText("Connected to vehicle");
                             buttonConnect.setText("Disconnect");
                         }
-                    }, 10000);
+                    }, 5000);
                     cBTInitSendReceive=new classBTInitDataCommunication(BTSocket);
                     cBTInitSendReceive.start();
                     bBTConnected=true;
